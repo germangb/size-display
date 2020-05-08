@@ -1,10 +1,8 @@
-# `size-display`
+# size-display
+
+![Crates.io](https://img.shields.io/crates/v/size-display?style=flat-square)
 
 Display human readable file sizes.
-
-## Limitation
-
-Displayed units go up to Exabyte (2^60).
 
 ## Example
 
@@ -12,5 +10,5 @@ Displayed units go up to Exabyte (2^60).
 use size_display::Size;
 
 assert_eq!("24", format!("{}", Size(24)));
-assert_eq!("4.2G", format!("{}", Size(4509715660)));
+assert_eq!("4.2G", format!("{:.1}", Size(4509715660)));
 ```
