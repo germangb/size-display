@@ -1,6 +1,6 @@
 # size-display
 
-![Crates.io](https://img.shields.io/crates/v/size-display?style=flat-square)
+[![Crates.io](https://img.shields.io/crates/v/size-display?style=flat-square)](https://crates.io/crates/size-display)
 
 Display human readable file sizes.
 
