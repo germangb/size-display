@@ -1,12 +1,10 @@
-//! # size-display
-//!
 //! Display human readable file sizes.
 //!
-//! ## Limitation
+//! # Limitation
 //!
 //! Displayed units go up to Exabyte (2^60).
 //!
-//! ## Example
+//! # Example
 //!
 //! ```
 //! use size_display::Size;
@@ -16,16 +14,17 @@
 //! ```
 
 use std::fmt;
-use std::fmt::Debug;
 
-pub const K: u64 = 1024;
-pub const M: u64 = K * K;
-pub const G: u64 = M * K;
-pub const T: u64 = G * K;
-pub const P: u64 = T * K;
-pub const E: u64 = P * K;
+pub const KILO: u64 = 1024;
+pub const MEGA: u64 = KILO * KILO;
+pub const GIGA: u64 = MEGA * KILO;
+pub const TERA: u64 = GIGA * KILO;
+pub const PETA: u64 = TERA * KILO;
+pub const EXA: u64 = PETA * KILO;
 
-/// File size type with human-readable `Display`.
+/// File size type with human-readable [`Display`].
+///
+/// [`Display`]: https://doc.rust-lang.org/std/fmt/trait.Display.html
 pub struct Size(pub u64);
 
 impl fmt::Debug for Size {
@@ -40,24 +39,24 @@ impl fmt::Display for Size {
         let bytes = self.0;
 
         let (unit, char) = match bytes {
-            e if e >= E => (E, "E"),
-            p if p >= P => (P, "P"),
-            t if t >= T => (T, "T"),
-            g if g >= G => (G, "G"),
-            m if m >= M => (M, "M"),
-            k if k >= K => (K, "K"),
-            b => (1, ""),
+            e if e >= EXA => (EXA, "E"),
+            p if p >= PETA => (PETA, "P"),
+            t if t >= TERA => (TERA, "T"),
+            g if g >= GIGA => (GIGA, "G"),
+            m if m >= MEGA => (MEGA, "M"),
+            k if k >= KILO => (KILO, "K"),
+            _ => (1, ""),
         };
 
-        format_size(f, self.0, unit)?;
-        write!(f, "{}", char)?;
-        Ok(())
-    }
-}
+        match bytes % unit {
+            0 => <u64 as fmt::Display>::fmt(&(bytes / unit), f),
+            _ => <f64 as fmt::Display>::fmt(&(bytes as f64 / unit as f64), f),
+        }?;
 
-fn format_size(f: &mut fmt::Formatter, size: u64, unit: u64) -> fmt::Result {
-    match size % unit {
-        0 => <u64 as fmt::Display>::fmt(&(size / unit), f),
-        _ => <f64 as fmt::Display>::fmt(&(size as f64 / unit as f64), f),
+        if char != "" {
+            write!(f, "{}", char)?;
+        }
+
+        Ok(())
     }
 }
